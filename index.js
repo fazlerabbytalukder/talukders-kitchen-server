@@ -25,12 +25,11 @@ async function run() {
         const database = client.db("talukdersKitchen");
         const foodCollection = database.collection("foods");
 
-        const doc = {
-            title: "sample data begaining",
-            content: "for check data",
-        }
-        const result = await foodCollection.insertOne(doc);
-        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        app.get('/foods', async (req, res) => {
+            const cursor = foodCollection.find({});
+            const foods = await cursor.toArray();
+            res.send(foods);
+        })
 
 
     } finally {
