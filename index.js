@@ -40,12 +40,33 @@ async function run() {
             res.json(foods);
         })
 
+
+
+
+
+
+
         //POST ORDER DATA
         app.post('/orders', async (req, res) => {
             const orders = req.body;
             const result = await ordersCollection.insertOne(orders);
             // console.log(result);
             res.json(result)
+        })
+        //GET ORDER DATA
+        app.get('/orders', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const cursor = ordersCollection.find(query);
+            const orders = await cursor.toArray();
+            res.json(orders);
+        });
+        //DELETE ORDER DATA
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id:ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+            res.json(result);
         })
 
 
