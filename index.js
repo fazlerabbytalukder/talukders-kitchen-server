@@ -25,6 +25,7 @@ async function run() {
         const database = client.db("talukdersKitchen");
         const foodCollection = database.collection("foods");
         const ordersCollection = database.collection("orders");
+        const usersCollection = database.collection("users");
 
         app.get('/foods', async (req, res) => {
             const cursor = foodCollection.find({});
@@ -66,6 +67,28 @@ async function run() {
             const id = req.params.id;
             const query = { _id:ObjectId(id) };
             const result = await ordersCollection.deleteOne(query);
+            res.json(result);
+        })
+
+
+
+
+
+
+        //USER INFO POST TO THE DATABASE
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result)
+        })
+        //USER PUT FOR GOOGLE SIGN IN METHOD(upsert)
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         })
 
