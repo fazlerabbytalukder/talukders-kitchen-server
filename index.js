@@ -24,11 +24,28 @@ async function run() {
         // console.log('database connect successfully');
         const database = client.db("talukdersKitchen");
         const foodCollection = database.collection("foods");
+        const ordersCollection = database.collection("orders");
 
         app.get('/foods', async (req, res) => {
             const cursor = foodCollection.find({});
             const foods = await cursor.toArray();
             res.send(foods);
+        })
+
+        //GET API With id
+        app.get('/foods/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const foods = await foodCollection.findOne(query);
+            res.json(foods);
+        })
+
+        //POST ORDER DATA
+        app.post('/orders', async (req, res) => {
+            const orders = req.body;
+            const result = await ordersCollection.insertOne(orders);
+            // console.log(result);
+            res.json(result)
         })
 
 
