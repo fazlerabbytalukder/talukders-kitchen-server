@@ -5,12 +5,14 @@ const ObjectId = require('mongodb').ObjectId;
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
+const fileUpload = require('express-fileupload');
 
 
 
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cnnr8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -27,19 +29,49 @@ async function run() {
         const ordersCollection = database.collection("orders");
         const usersCollection = database.collection("users");
 
+
+        //GET ALL FOOD DATA
         app.get('/foods', async (req, res) => {
             const cursor = foodCollection.find({});
             const foods = await cursor.toArray();
             res.send(foods);
         })
-
-        //GET API With id
+        //GET API WITH ID
         app.get('/foods/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const foods = await foodCollection.findOne(query);
             res.json(foods);
         })
+
+        //POST FOOD DATA
+        app.post('/foods', async (req, res) => {
+            const foodName = req.body.foodName;
+            const category = req.body.category;
+            const price = req.body.price;
+            const star = req.body.star;
+            const pic = req.files.img;
+
+            const picData = pic.data;
+            const encodedPic = picData.toString('base64');
+            const imgBuffer = Buffer.from(encodedPic, 'base64');
+
+            const foods = {
+                foodName,
+                category,
+                price,
+                star,
+                img:imgBuffer
+            }
+
+            const result = await foodCollection.insertOne(foods);
+            res.json(result)
+
+            // console.log('body', req.body);
+            // console.log('files', req.files);
+            // res.json({ success: true });
+        })
+
 
 
 
