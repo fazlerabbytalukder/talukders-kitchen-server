@@ -9,8 +9,8 @@ const fileUpload = require('express-fileupload');
 
 //when order found error request entity too large then i use this to solve this problem
 var bodyParser = require('body-parser');
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 
 
@@ -66,7 +66,7 @@ async function run() {
                 category,
                 price,
                 star,
-                img:imgBuffer
+                img: imgBuffer
             }
 
             const result = await foodCollection.insertOne(foods);
@@ -99,10 +99,30 @@ async function run() {
             const orders = await cursor.toArray();
             res.json(orders);
         });
+        //GET ALL USER ORDER DATA
+        app.get('/allOrders', async (req, res) => {
+            const cursor = ordersCollection.find({});
+            const orders = await cursor.toArray();
+            res.json(orders);
+        });
+        //UPDATE ORDER DATA
+        app.put('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const updateOrder = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upset: true };
+            const updateDoc = {
+                $set: {
+                    status: "Shipped"
+                },
+            };
+            const result = await ordersCollection.updateOne(filter, updateDoc, options);
+            res.json(result)
+        })
         //DELETE ORDER DATA
         app.delete('/orders/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id:ObjectId(id) };
+            const query = { _id: ObjectId(id) };
             const result = await ordersCollection.deleteOne(query);
             res.json(result);
         })
