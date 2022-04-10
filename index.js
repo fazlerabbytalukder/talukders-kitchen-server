@@ -50,32 +50,38 @@ async function run() {
         })
 
         //POST FOOD DATA
+        //POST FOOD DATA
         app.post('/foods', async (req, res) => {
-            const foodName = req.body.foodName;
-            const category = req.body.category;
-            const price = req.body.price;
-            const star = req.body.star;
-            const pic = req.files.img;
-
-            const picData = pic.data;
-            const encodedPic = picData.toString('base64');
-            const imgBuffer = Buffer.from(encodedPic, 'base64');
-
-            const foods = {
-                foodName,
-                category,
-                price,
-                star,
-                img: imgBuffer
-            }
-
+            const foods = req.body;
             const result = await foodCollection.insertOne(foods);
             res.json(result)
-
-            // console.log('body', req.body);
-            // console.log('files', req.files);
-            // res.json({ success: true });
         })
+        // app.post('/foods', async (req, res) => {
+        //     const foodName = req.body.foodName;
+        //     const category = req.body.category;
+        //     const price = req.body.price;
+        //     const star = req.body.star;
+        //     const pic = req.files.img;
+
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const imgBuffer = Buffer.from(encodedPic, 'base64');
+
+        //     const foods = {
+        //         foodName,
+        //         category,
+        //         price,
+        //         star,
+        //         img: imgBuffer
+        //     }
+
+        //     const result = await foodCollection.insertOne(foods);
+        //     res.json(result)
+
+        //     // console.log('body', req.body);
+        //     // console.log('files', req.files);
+        //     // res.json({ success: true });
+        // })
 
 
 
