@@ -33,6 +33,7 @@ async function run() {
         const foodCollection = database.collection("foods");
         const ordersCollection = database.collection("orders");
         const usersCollection = database.collection("users");
+        const bookTableCollection = database.collection("booktable");
 
 
         //GET ALL FOOD DATA
@@ -130,6 +131,31 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await ordersCollection.deleteOne(query);
+            res.json(result);
+        })
+
+
+
+
+
+        //POST BOOK TABLE DATA
+        app.post('/booktable', async (req, res) => {
+            const bookTable = req.body;
+            const result = await bookTableCollection.insertOne(bookTable);
+            // console.log(result);
+            res.json(result)
+        })
+        //GET ALL RESERVATION DATA
+        app.get('/booktable', async (req, res) => {
+            const cursor = bookTableCollection.find({});
+            const reservation = await cursor.toArray();
+            res.json(reservation);
+        });
+        //DELETE ORDER DATA
+        app.delete('/booktable/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bookTableCollection.deleteOne(query);
             res.json(result);
         })
 
