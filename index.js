@@ -51,9 +51,9 @@ async function run() {
         })
 
         //POST FOOD DATA
-        //POST FOOD DATA
         app.post('/foods', async (req, res) => {
             const foods = req.body;
+            // console.log(foods);
             const result = await foodCollection.insertOne(foods);
             res.json(result)
         })
@@ -83,6 +83,15 @@ async function run() {
         //     // console.log('files', req.files);
         //     // res.json({ success: true });
         // })
+
+
+         //DELETE FOODS
+         app.delete('/foods/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id:ObjectId(id) };
+            const result = await foodCollection.deleteOne(query);
+            res.json(result);
+        })
 
 
 
