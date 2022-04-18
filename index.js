@@ -85,10 +85,10 @@ async function run() {
         // })
 
 
-         //DELETE FOODS
-         app.delete('/foods/:id', async (req, res) => {
+        //DELETE FOODS
+        app.delete('/foods/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id:ObjectId(id) };
+            const query = { _id: ObjectId(id) };
             const result = await foodCollection.deleteOne(query);
             res.json(result);
         })
